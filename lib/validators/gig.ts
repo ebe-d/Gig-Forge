@@ -7,6 +7,7 @@ export const createGigSchema=z.object({
     title:z.string().trim().min(10).max(120),
     description:z.string().trim().min(30).max(5000),
     price:z.coerce.number().min(5).max(1000000),
+    revisions:z.coerce.number().int().min(0).max(100).default(0).optional(),
     currency:z.enum(["INR","USD"]).default("INR").optional(),
     deliveryDays:z.coerce.number().int().min(0).max(15).default(1),
     tags:z

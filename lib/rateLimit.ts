@@ -6,6 +6,8 @@ type GlobalIRL={
     upstashRedis?:ReturnType<typeof Redis.fromEnv>;
     rlGetGigs?:Ratelimit;
     rlPostGigs?:Ratelimit;
+    rlGetRequests?:Ratelimit;
+    rlPostRequests?:Ratelimit;
 }
 const g=globalThis as unknown as GlobalIRL;
 
@@ -30,6 +32,24 @@ export const rlPostGigs=g.rlPostGigs??new Ratelimit({
 if(!g.rlGetGigs) g.rlGetGigs=rlGetGigs;
 
 if(!g.rlPostGigs) g.rlPostGigs=rlPostGigs;
+
+export const rlGetRequests=g.rlGetRequests ?? new Ratelimit({
+    redis,
+    limiter:Ratelimit.fixedWindow(60,"1 m"),
+    analytics:true,
+    prefix:"gf:rl:getRequests"
+});
+
+export const rlPostRequests=g.rlPostRequests ?? new Ratelimit({
+    redis,
+    limiter:Ratelimit.fixedWindow(10,"1 m"),
+    analytics:true,
+    prefix:"gf:rl:postRequests"
+});
+
+if(!g.rlGetRequests) g.rlGetRequests=rlGetRequests;
+
+if(!g.rlPostRequests) g.rlPostRequests=rlPostRequests;
 
 export type RLResult=Awaited<ReturnType<typeof rlGetGigs.limit>>
 
