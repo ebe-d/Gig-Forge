@@ -2,6 +2,7 @@ import { requireDbUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { rateLimitHeaders, rlGetGigs, rlPostGigs } from "@/lib/rateLimit";
 import { slugify } from "@/lib/slug";
+import { getIP, json, toMoneyStr } from "@/lib/utils/util";
 import { createGigSchema, listGigsQuerySchema, parseTagsCSV } from "@/lib/validators/gig";
 import { error } from "console";
 import { stat } from "fs";
@@ -12,21 +13,7 @@ export const runtime="nodejs";
 
 const MAX_ACTIVE_GIGS_UNVERIFIED=5;
 
-function json(data:unknown,init?:number | ResponseInit){
-    return NextResponse.json(data,typeof init === "number" ? {status:init}:init);
-}
 
-function getIP(req:Request){
-    const ip=req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip");
-
-    return ip??"unknown";
-}
-
-function toMoneyStr(v:number | string){
-    const n=typeof v==="number"?v:Number(v);
-    return n.toFixed(2);
-}
 
 export async function GET(req:Request) {
     try{

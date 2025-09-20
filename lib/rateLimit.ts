@@ -8,6 +8,8 @@ type GlobalIRL={
     rlPostGigs?:Ratelimit;
     rlGetRequests?:Ratelimit;
     rlPostRequests?:Ratelimit;
+    rlGetProposals?:Ratelimit;
+    rlPostProposals?:Ratelimit;
 }
 const g=globalThis as unknown as GlobalIRL;
 
@@ -50,6 +52,24 @@ export const rlPostRequests=g.rlPostRequests ?? new Ratelimit({
 if(!g.rlGetRequests) g.rlGetRequests=rlGetRequests;
 
 if(!g.rlPostRequests) g.rlPostRequests=rlPostRequests;
+
+export const rlGetProposals=g.rlGetProposals ?? new Ratelimit ({
+    redis,
+    limiter:Ratelimit.fixedWindow(60,"1 m"),
+    analytics:true,
+    prefix:"gf:rl:getProposals"
+})
+
+export const rlPostProposals=g.rlPostProposals ?? new Ratelimit ({
+    redis,
+    limiter:Ratelimit.fixedWindow(10,"1 m"),
+    analytics:true,
+    prefix:"gf:rl:postProposals"
+});
+
+if(!g.rlGetProposals) g.rlGetProposals=rlGetProposals;
+if(!g.rlPostProposals) g.rlPostProposals=rlPostProposals;
+
 
 export type RLResult=Awaited<ReturnType<typeof rlGetGigs.limit>>
 

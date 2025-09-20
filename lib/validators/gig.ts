@@ -1,7 +1,7 @@
 import {z} from 'zod';
 
 const MAX_TAGS=10;
-const MAX_IMAGES=10;
+const MAX_IMAGES=5;
 
 export const createGigSchema=z.object({
     title:z.string().trim().min(10).max(120),

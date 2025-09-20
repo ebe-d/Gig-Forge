@@ -1,7 +1,7 @@
 import {z} from 'zod';
 
 const MAX_TAGS=10;
-const MAX_ATTACHMENTS=10;
+const MAX_ATTACHMENTS=5;
 
 export const createRequestSchema=z.object({
     title: z.string().trim().min(10).max(140),
